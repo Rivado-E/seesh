@@ -1,6 +1,7 @@
 CC = gcc
 # CFLAGS = -Wall -Wextra -std=c99 -g
-CFLAGS = -std=c99
+# CFLAGS = -std=c99
+CFLAGS = 
 LDFLAGS = 
 
 # Source files and executable
