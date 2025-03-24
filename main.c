@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define BUILTINS_LEN 6
@@ -73,12 +74,12 @@ void consume_builtin(Lexer *l, Token *t, const char *builtin) {
     if (*(cursor) == '"') {
 
       t->start++;
-      t->len = strchr(cursor, '"') - cursor;
+      t->len = strchr(cursor+1, '"') - cursor;
 
     } else if (*(cursor) == '\'') {
-
+      cursor ++; 
       t->start++;
-      t->len = strchr(cursor, '\'') - cursor;
+      t->len = strchr(cursor+1, '\'') - cursor;
 
     } else {
       char *whitespace = strpbrk(cursor, " \t\n\r\f\v");
@@ -88,6 +89,12 @@ void consume_builtin(Lexer *l, Token *t, const char *builtin) {
         t->len = l->len - l->cursor;
       }
     }
+
+    char substring[t->len + 1];
+    strncpy(substring, cursor, t->len);
+    substring[t->len] =  '\0';
+    printf("%s\n", substring);
+
   } else {
     printf("not implemented\n");
   }
@@ -138,11 +145,8 @@ void next_token(Lexer *l, Token *t) {
 
       if ((void *)strstr(cursor, BUILTINS[i]) == cursor) {
         t->type = Tok_Builtin;
-        printf("Hey a builtin %s\n", BUILTINS[i]);
         l->cursor += 5;
         consume_builtin(l, t, "echo");
-        printf("%c\n", l->content[l->cursor]);
-        printf("%d %d", t->start, t->len);
       }
     }
   }
@@ -165,7 +169,7 @@ int main(int argc, char **argv) {
   Token token = {0};
 
   lexer.len = 9;
-  lexer.content = "echo sams";
+  lexer.content = "echo 'just because'";
 
   next_token(&lexer, &token);
 
