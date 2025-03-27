@@ -74,12 +74,12 @@ void consume_builtin(Lexer *l, Token *t, const char *builtin) {
     if (*(cursor) == '"') {
 
       t->start++;
-      t->len = strchr(cursor+1, '"') - cursor;
+      t->len = strchr(cursor + 1, '"') - cursor;
 
     } else if (*(cursor) == '\'') {
-      cursor ++; 
+      cursor++;
       t->start++;
-      t->len = strchr(cursor+1, '\'') - cursor;
+      t->len = strchr(cursor + 1, '\'') - cursor;
 
     } else {
       char *whitespace = strpbrk(cursor, " \t\n\r\f\v");
@@ -92,7 +92,7 @@ void consume_builtin(Lexer *l, Token *t, const char *builtin) {
 
     char substring[t->len + 1];
     strncpy(substring, cursor, t->len);
-    substring[t->len] =  '\0';
+    substring[t->len] = '\0';
     printf("%s\n", substring);
 
   } else {
@@ -158,20 +158,31 @@ void next_token(Lexer *l, Token *t) {
   return;
 }
 
+void echo();
+void cd();
+
 void print_debug(Token *tokens) {}
 
 int main(int argc, char **argv) {
 
-  char *test = "'echo sam'";
+  Lexer lexer = {0};
+  Token *tokens = calloc(50, sizeof(Token));
+  char *test = "echo sam";
+
   printf("test: %s\n", test);
 
-  Lexer lexer = {0};
-  Token token = {0};
+  lexer.len = strlen(test);
+  lexer.content = test;
 
-  lexer.len = 9;
-  lexer.content = "echo 'just because'";
+  while (1) {
+    Token token = {0};
+    next_token(&lexer, &token);
 
-  next_token(&lexer, &token);
+    if (token.type == Tok_End) {
+      break;
+    } else if (token.type == Tok_Identifier) {
+    }
+  }
 
   return 0;
 }
